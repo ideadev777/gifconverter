@@ -1,0 +1,40 @@
+﻿Build started 9/4/2020 2:21:30 PM.
+     1>Project "D:\dev\TKGitToMovie\calendar\calendar.vcxproj" on node 2 (Build target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.CppBuild.targets(345,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
+     1>CustomBuild:
+         Moc'ing cxfullimagelabel.h...
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /IC:\Qt\Qt5.0.2\5.0.2\msvc2012_64\include /IC:\Qt\Qt5.0.2\5.0.2\msvc2012_64\include\QtWidgets /IC:\Qt\Qt5.0.2\5.0.2\msvc2012_64\include\QtGui /IC:\Qt\Qt5.0.2\5.0.2\msvc2012_64\include\QtCore /Irelease /I"C:\Qt\Qt5.0.2\5.0.2\msvc2012_64\mkspecs\win32-msvc2012" /I.\ /I.\GeneratedFiles /IC:\Qt\Qt5.0.2\5.0.2\msvc2012_64\include\QtMultimedia /IC:\Qt\Qt5.0.2\5.0.2\msvc2012_64\include\QtMultimediaWidgets /Zi /nologo /W3 /WX- /O2 /D _WINDOWS /D NDEBUG /D QT_CORE_LIB /D QT_GUI_LIB /D QT_NO_DEBUG /D QT_OPENGL_ES_2 /D QT_OPENGL_ES_2_ANGLE /D QT_WIDGETS_LIB /D UNICODE /D UNICODE /D WIN32 /D WIN32 /D QT_MULTIMEDIA_LIB /D QT_MULTIMEDIAWIDGETS_LIB /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"x64\Release\\" /Fd"x64\Release\vc110.pdb" /Gd /TP /errorReport:prompt -Zm200 -w34100 -w34189 GeneratedFiles\Release\moc_cxfullimagelabel.cpp GeneratedFiles\Release\moc_mainwindow.cpp cxfullimagelabel.cpp main.cpp mainwindow.cpp
+         moc_cxfullimagelabel.cpp
+         moc_mainwindow.cpp
+         cxfullimagelabel.cpp
+     1>cxfullimagelabel.cpp(29): warning C4100: 'event' : unreferenced formal parameter
+     1>cxfullimagelabel.cpp(185): warning C4100: 'ev' : unreferenced formal parameter
+         main.cpp
+         mainwindow.cpp
+     1>mainwindow.cpp(232): warning C4100: 'exitStatus' : unreferenced formal parameter
+     1>mainwindow.cpp(232): warning C4100: 'exitCode' : unreferenced formal parameter
+     1>mainwindow.cpp(290): warning C4189: 'w' : local variable is initialized but not referenced
+     1>mainwindow.cpp(307): warning C4189: 'w' : local variable is initialized but not referenced
+     1>mainwindow.cpp(351): warning C4100: 'event' : unreferenced formal parameter
+     1>mainwindow.cpp(427): warning C4100: 'event' : unreferenced formal parameter
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\dev\TKGitToMovie\x64\Release\\calendar.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Qt\Qt5.0.2\5.0.2\msvc2012_64\lib /LIBPATH:C:\Qt\Qt5.0.2\5.0.2\msvc2012_64\lib qtmain.lib C:\Qt\Qt5.0.2\5.0.2\msvc2012_64\lib\Qt5Widgets.lib C:\Qt\Qt5.0.2\5.0.2\msvc2012_64\lib\Qt5Gui.lib C:\Qt\Qt5.0.2\5.0.2\msvc2012_64\lib\Qt5Core.lib libEGL.lib libGLESv2.lib gdi32.lib user32.lib Qt5Multimedia.lib Qt5MultimediaWidgets.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"D:\dev\TKGitToMovie\x64\Release\calendar.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /MACHINE:X64 "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'"  /SUBSYSTEM:WINDOWS x64\Release\calendar.res
+         x64\Release\common.obj
+         x64\Release\cxfullimagelabel.obj
+         x64\Release\cxprogressdlg.obj
+         x64\Release\cxseekbar.obj
+         x64\Release\qrc_res.obj
+         x64\Release\moc_cxfullimagelabel.obj
+         x64\Release\moc_cxprogressdlg.obj
+         x64\Release\moc_cxseekbar.obj
+         x64\Release\moc_mainwindow.obj
+         x64\Release\main.obj
+         x64\Release\mainwindow.obj
+         calendar.vcxproj -> D:\dev\TKGitToMovie\x64\Release\calendar.exe
+     1>Done Building Project "D:\dev\TKGitToMovie\calendar\calendar.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:06.76

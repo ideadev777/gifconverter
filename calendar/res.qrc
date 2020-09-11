@@ -1,0 +1,25 @@
+<RCC>
+  <qresource prefix="/">
+    <file>res/icon/save+icon-1320167995084087448.png</file>
+    <file>res/icon/Play-Disabled-icon.png</file>
+    <file>res/icon/Play-icon.png</file>
+    <file>res/icon/Actions-remove-icon.png</file>
+    <file>res/icon/Add-icon.png</file>
+    <file>res/icon/loading.gif</file>
+    <file>res/icon/arrow-left-icon.png</file>
+    <file>res/icon/arrow-right-icon.png</file>
+    <file>res/icon/icon.ico</file>
+    <file>res/icon/logo.png</file>
+    <file>res/icon/check.png</file>
+    <file>res/icon/down.png</file>
+    <file>res/icon/up.png</file>
+    <file>res/icon/download.png</file>
+    <file>res/icon/banner.png</file>
+    <file>res/icon/open.png</file>
+    <file>res/icon/select.png</file>
+    <file>res/qss/1.qss</file>
+    <file>res/qss/2.qss</file>
+    <file>res/qss/4.qss</file>
+    <file>res/qss/3.qss</file>
+  </qresource>
+</RCC>
