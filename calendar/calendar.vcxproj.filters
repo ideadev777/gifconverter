@@ -92,6 +92,12 @@
     <ClCompile Include="cxprogressdlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="license.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="simplecrypt.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwindow.h">
@@ -127,6 +133,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_dlg_progress.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="license.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="simplecrypt.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

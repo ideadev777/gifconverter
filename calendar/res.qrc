@@ -1,5 +1,10 @@
 <RCC>
   <qresource prefix="/">
+    <file>res/icon/del.png</file>
+    <file>res/icon/delete_image.png</file>
+    <file>res/icon/more_page_btn_diasbled.png</file>
+    <file>res/icon/arrow-dropleft-icon_1.png</file>
+    <file>res/icon/arrow-dropright-icon_1.png</file>
     <file>res/icon/save+icon-1320167995084087448.png</file>
     <file>res/icon/Play-Disabled-icon.png</file>
     <file>res/icon/Play-icon.png</file>

@@ -304,8 +304,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="license.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
+    <ClCompile Include="simplecrypt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwindow.h">
@@ -348,6 +350,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="simplecrypt.h" />
     <CustomBuild Include="cxfullimagelabel.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing cxfullimagelabel.h...</Message>
@@ -404,6 +407,7 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_OPENGL_ES_2 -DQT_OPENGL_ES_2_ANGLE -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DQT_MULTIMEDIA_LIB -DQT_MULTIMEDIAWIDGETS_LIB "-IC:\Qt\Qt5.0.2\5.0.2\msvc2012_64\include" "-IC:\Qt\Qt5.0.2\5.0.2\msvc2012_64\include\QtWidgets" "-IC:\Qt\Qt5.0.2\5.0.2\msvc2012_64\include\QtGui" "-IC:\Qt\Qt5.0.2\5.0.2\msvc2012_64\include\QtCore" "-I.\release" "-IC:\Qt\Qt5.0.2\5.0.2\msvc2012_64\mkspecs\win32-msvc2012" "-I." "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtMultimedia" "-I$(QTDIR)\include\QtMultimediaWidgets"</Command>
     </CustomBuild>
     <ClInclude Include="GeneratedFiles\ui_dlg_progress.h" />
+    <ClInclude Include="license.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="GeneratedFiles\ui_mainwindow.h" />
   </ItemGroup>

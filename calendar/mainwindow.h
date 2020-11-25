@@ -45,20 +45,27 @@ public slots:
 	void onSeek( qint64 pos ) ;
 	void onNextImage() ;
 	void onPrevImage() ;
+	void onNextImage1() ;
+	void onPrevImage1() ;
 	void onDelete() ;
 	void onWatermark() ;
 	void onAddSize() ;
 	void onRemoveSize() ;
 	void onLWDoubleClicked( QListWidgetItem* item ) ;
+	void onIntroPlay() ;
+	void onUploadIntro() ;
+	void onLibrary() ;
 private:
 	void loadSetting() ;
 	void saveSetting() ;
 	void fitToScreen() ;
 	void switchPlayState( bool on ) ;
 	void setCurrentImage( int ) ;
+	void setCurrentImage1(int);
 	void startRender( int id ) ;
 	void stopPlaying() ;
 	void addIconSizeItem( QString path, QSizeF sz) ;
+	QString createSimpleUuid() ;
 	Ui::Form_MainWindow ui ;
 	QString m_audioPath, m_audioTmp ;
 //	QString m_imagePath ;
@@ -78,6 +85,8 @@ private:
 	CxProgressDlg* m_progressBar ;
 	int imgW, imgH ;
 	QListWidget* m_iconSizeLW ;
+	QString m_introVideo ;
+	bool m_isIntroPlay ;
 };
 
 #endif // MAINWINDOW_H

@@ -5,6 +5,10 @@
 #include <QPainter>
 #include <QCloseEvent>
 #include "common.h"
+#include <QFileInfo>
+#include <QUuid>
+#include <QDir>
+#include "license.h"
 
 #define LOGOW 50
 #define LOGOH 60
@@ -13,7 +17,9 @@
 MainWindow::MainWindow(QWidget *parent)
 	: QWidget(parent)
 {
+//	if( !isLicensed() ) exit(1) ;
 	ui.setupUi(this) ;
+	QDir().mkdir("INTRO LIBARY") ;
 	setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint );
 //	setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint);
 
@@ -40,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(m_player, SIGNAL(positionChanged(qint64)), this, SLOT(onVideoPositionChanged(qint64)));
 
 	connect(ui.lbl_seek, SIGNAL(__seek(qint64)), this, SLOT(onSeek(qint64))) ;
+	connect(ui.lbl_seek_intro, SIGNAL(__seek(qint64)), this, SLOT(onSeek(qint64))) ;
 	connect( m_process, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(onProcessFinished(int,QProcess::ExitStatus))) ;
 	connect (m_process, SIGNAL(readyReadStandardOutput()), this, SLOT(onProcessStandardOutput()));
 	connect( ui.tb_create, SIGNAL(clicked()), this, SLOT(onCreate())) ;
@@ -51,26 +58,41 @@ MainWindow::MainWindow(QWidget *parent)
 
 	connect( ui.tb_next, SIGNAL(clicked()), this, SLOT(onNextImage())) ;
 	connect( ui.tb_prev, SIGNAL(clicked()), this, SLOT(onPrevImage())) ;
-	connect( ui.tb_delete, SIGNAL(clicked()), this, SLOT(onDelete())) ;
+	connect( ui.tb_next_1, SIGNAL(clicked()), this, SLOT(onNextImage1())) ;
+	connect( ui.tb_prev_1, SIGNAL(clicked()), this, SLOT(onPrevImage1())) ;
+	connect( ui.tb_detail, SIGNAL(clicked()), this, SLOT(onDelete())) ;
+//	connect( ui.tb_delete, SIGNAL(clicked()), this, SLOT(onDelete())) ;
 	connect( ui.tb_watermark, SIGNAL(clicked()), this, SLOT(onWatermark())) ;
 
 	connect( ui.tb_add_size, SIGNAL(clicked()), this, SLOT(onAddSize())) ;
 	connect( ui.tb_del_size, SIGNAL(clicked()), this, SLOT(onRemoveSize())) ;
+	
+	connect( ui.tb_upload_intro, SIGNAL(clicked()), this, SLOT(onUploadIntro())) ;
+	connect( ui.tb_play_intro, SIGNAL(clicked()), this, SLOT(onIntroPlay())) ;
+	connect( ui.tb_library_intro, SIGNAL(clicked()), this, SLOT(onLibrary())) ;
+
 	ui.tb_play->setEnabled(false) ;
-	setFixedSize(1030,677) ;
+	setFixedSize(1096,822) ;
 
 	ui.w_video->hide() ;
 	ui.w_seek->hide() ;
 	ui.w_duration->hide() ;
 	ui.w_control->hide() ;
-	ui.tb_delete->hide() ;
+//	ui.tb_delete->hide() ;
 
+	ui.tb_next->hide() ;
+	ui.tb_prev->hide() ;
 
 	m_audioPath = m_savePath = "" ;
 	m_isPressing = false ;
 //	QFile styleSheet("D:/qss/3.qss");
 	loadSetting() ;
 	m_audioDuration = 10 ;
+	if( !QDir("tmp").exists() )
+	{
+		QDir().mkpath("tmp") ;
+	}
+	m_isIntroPlay = false ;
 } 
 
 MainWindow::~MainWindow()
@@ -78,22 +100,33 @@ MainWindow::~MainWindow()
 
 }
 
+QString MainWindow::createSimpleUuid()
+{
+	QString ret = QUuid::createUuid().toString() ;
+	ret.chop(1) ;
+	ret = ret.right(ret.length()-1) ;
+	return ret ;
+}
+
+
 void MainWindow::onWatermark()
 {
 	if( !m_imageList.count() )
 	{
-		QMessageBox::information(this, "", "Please upload image first.") ;
-		return ;
+//		QMessageBox::information(this, "", "Please upload image first.") ;
+//		return ;
 	}
 	QString fileName = QFileDialog::getOpenFileName(this, tr("Open Watermark File"), "", tr("Images (*.png *.gif *.jpg)"));
 	if( !fileName.length() ) return ;
-	QPixmap pix(fileName) ;
+	QString filePath = QString("tmp/%1.%2").arg(createSimpleUuid()).arg(QFileInfo(fileName).suffix()) ;
+	QFile(fileName).copy(filePath) ;
+	QPixmap pix(filePath) ;
 	if( pix.isNull() )
 	{
 		QMessageBox::information(this, "", "Invalid image format") ;
 		return ;
 	}
-	ui.lbl_pix->setWatermark(fileName) ;
+	ui.lbl_pix->setWatermark(filePath) ;
 }
 
 void MainWindow::onAudio()
@@ -122,20 +155,47 @@ void MainWindow::onImage()
 		m_imageList << fileName ;
 	}
 	int cnt = m_imageList.count() ;
+	setCurrentImage1(cnt-1) ;
 	if( !cnt ) return ;
 	setCurrentImage(cnt-1) ;
 	ui.lbl_pix->setImagePath(m_imageList.at(cnt-1)) ;
+}
+
+void MainWindow::setCurrentImage1( int id )
+{
+	
 }
 
 void MainWindow::setCurrentImage( int id )
 {
 	int cnt = m_imageList.count() ;
 	ui.w_control->setVisible(cnt) ;
+
 //	ui.tb_delete->setVisible(cnt>1) ;
 	if( id >= cnt || id < 0 ) return ;
 	m_curImageIndex = id ;
 	ui.lbl_pix->setImagePath(m_imageList.at(id)) ;
 	ui.lbl_index->setText(QString("%1 / %2").arg(id+1).arg(cnt)) ;
+	if( cnt == 1 )
+	{
+		ui.tb_bg_1->setIcon(QIcon(m_imageList[id])) ;
+		ui.tb_bg_2->setIcon(QIcon()) ;
+		ui.tb_bg_1->setStyleSheet(QString("QToolButton{background:#c3c3c3;%1}").arg("border:3px solid red;")) ;
+		ui.tb_bg_2->setStyleSheet(QString("QToolButton{background:#c3c3c3;%1}").arg("")) ;
+	}
+	if( cnt > 1 )
+	{
+		bool last = (id==cnt-1) ;
+		ui.tb_bg_1->setIcon(QIcon(m_imageList[last?id-1:id])) ;
+		ui.tb_bg_2->setIcon(QIcon(m_imageList[last?id:id+1])) ;
+		ui.tb_bg_1->setStyleSheet(QString("QToolButton{background:#c3c3c3;%1}").arg(!last?"border:3px solid red;":"")) ;
+		ui.tb_bg_2->setStyleSheet(QString("QToolButton{background:#c3c3c3;%1}").arg(!last?"":"border:3px solid red;")) ;
+	}
+	if( cnt == 0 )
+	{
+		ui.tb_bg_1->setStyleSheet(QString("QToolButton{background:#c3c3c3;%1}").arg("")) ;
+		ui.tb_bg_2->setStyleSheet(QString("QToolButton{background:#c3c3c3;%1}").arg("")) ;
+	}
 }
 
 void MainWindow::onCreate()
@@ -177,7 +237,6 @@ void MainWindow::onCreate()
 		lastsavePath = QString("tmpgif/%1.mp4").arg(createSimpleUuid()) ;
 	}
 	arg << "-i" << m_audioPath << "-filter_complex" << filter <<"-map" << map1 << "-map" <<QString("%1:a").arg(cnt) <<"-c:v" <<"libx264" << "-shortest" <<"-acodec" <<"copy" <<"-r" <<"29.7" << "-y" << lastsavePath ;
-
 	m_progressBar->startProgress(arg,m_audioDuration,QString("Finalizing ...")) ;
 	if( ui.lbl_pix->isShowWatermark() )
 	{
@@ -196,8 +255,6 @@ void MainWindow::onCreate()
 			str << "-hide_banner" <<"-v"<<"warning"<<"-i"<< iconPath <<"-filter_complex"<<iconFilter<<imgUuid ;
 //			QProcess::execute("ffmpeg",str) ;
 			m_progressBar->startProgress(str,-1,"Resizing Watermark...") ;
-//  -v warning -i 1.gif -filter_complex
-//"[0:v] scale=320:-1:flags=lanczos,split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse" logo-320.gif
 		}
 		else
 		{
@@ -217,6 +274,24 @@ void MainWindow::onCreate()
 		QFile::remove(imgUuid) ;
 	}
 	for( int i = 0; i < cnt; i++ ) QFile::remove(m_tmpVideoList[i]) ;
+
+	if( m_introVideo.length() )
+	{
+		QString res = QString("tmpgif/%1.mp4").arg(createSimpleUuid()) ;
+
+		arg.clear() ;
+
+//ffmpeg   out.mp4
+		QString str ;
+		arg << "-y" <<"-i"<<m_introVideo<<"-i"<<m_savePath<<"-filter_complex"<<"[0:v]setsar=1:1[v0];[1:v]scale=1600:900,setsar=1:1[v1];[v0][0:a][v1][1:a] concat=n=2:v=1:a=1"<<"-r" <<"29.7" << res ;
+//		arg << "-i" << m_introVideo << "-i" << m_savePath <<"-f"<< "lavfi"<< "-i" <<"color=s=1600x900:r=30" <<"-filter_complex" <<"[0]scale=1600x900:force_original_aspect_ratio=decrease[vid1];[1]scale=1600x900:force_original_aspect_ratio=decrease[vid2];[2][vid1]overlay=x='(W-w)/2':y='(H-h)/2':shortest=1[vid1];[2][vid2]overlay=x='(W-w)/2':y='(H-h)/2':shortest=1[vid2];[vid1][vid2]concat=n=2:v=1:a=0,setsar=1" << res ;
+		foreach(QString tmp,arg) str.append(tmp), str.append(" ") ;
+//		QMessageBox::information(NULL,"",str) ;
+//		QProcess::execute("ffmpeg",arg) ;
+		m_progressBar->startProgress(arg,m_audioDuration*2,QString("Adding Intro Video...")) ;// Hard coded
+		QFile(m_savePath).remove() ;
+		QFile(res).rename(m_savePath) ;
+	}
 
 	QApplication::restoreOverrideCursor() ;
 	ui.tb_play->setEnabled(true) ;
@@ -279,19 +354,57 @@ void MainWindow::startRender( int id )
 	m_progressBar->startProgress(arg,dur*1000,QString("Rendering Image %1 ...").arg(id+1)) ;
 }
 
+void MainWindow::onIntroPlay()
+{
+	m_isIntroPlay = true ;
+	if( ui.tb_play_intro->isChecked() )
+	{
+		m_videoDuration = 0 ;
+		ui.tb_play_intro->setText("STOP") ;
+		m_player->setMedia(QUrl::fromLocalFile(m_introVideo)) ;
+		int w = ui.w_container->height() ;
+		switchPlayState(true) ;
+		m_player->setVideoOutput(m_videoWidget);
+		m_videoWidget->setGeometry(0,0,ui.w_video->width(),ui.w_video->height()) ;
+		m_player->play() ;
+	}
+	else
+	{
+		switchPlayState(false) ;
+		ui.tb_play_intro->setText("PLAY") ;
+		m_player->stop() ;
+	}
+}
+
+void MainWindow::onUploadIntro()
+{
+	QString fileName = QFileDialog::getOpenFileName(this, tr("Open Intro File"), "", tr("Mp4 files (*.mp4)"));
+	if( !fileName.length() ) return ;
+	ui.tb_play_intro->setEnabled(true) ;
+	m_introVideo = fileName ;
+}
+
+void MainWindow::onLibrary()
+{
+	QString fileName = QFileDialog::getOpenFileName(this, tr("Open Intro File"), "INTRO LIBARY" , tr("Mp4 files (*.mp4)"));
+	if( !fileName.length() ) return ;
+	ui.tb_play_intro->setEnabled(true) ;
+	m_introVideo = fileName ;
+}
+
 void MainWindow::onPlay()
 {
+	m_isIntroPlay = false ;
 	if( ui.tb_play->isChecked() )
 	{
 		m_videoDuration = 0 ;
 		ui.tb_play->setText("STOP") ;
-//		m_player->setMedia(QUrl::fromLocalFile("D://1.wmv")) ;
 		m_player->setMedia(QUrl::fromLocalFile(m_savePath)) ;
 		int w = ui.w_container->height() ;
 		switchPlayState(true) ;
 		m_player->setVideoOutput(m_videoWidget);
 		m_videoWidget->setGeometry(0,0,ui.w_video->width(),ui.w_video->height()) ;
-//		m_videoWidget->setGeometry(0,0,ui.w_video->width(),400) ;
+//		ui.lbl_seek->hide() ;
 		m_player->play() ;
 	}
 	else
@@ -308,7 +421,7 @@ void MainWindow::switchPlayState( bool on )
 	ui.lbl_pix->setVisible(!on) ;
 	ui.w_audio->setVisible(!on) ;
 	ui.w_duration->setVisible(on) ;
-	ui.w_seek->setVisible(on) ;
+//	ui.w_seek->setVisible(on) ;
 //	ui.w_progress->setVisible(false) ;
 	ui.w_video->setVisible(on) ;
 	m_videoWidget->setVisible(on) ;
@@ -379,12 +492,14 @@ void MainWindow::fitToScreen()
 void MainWindow::onVideoDurationChanged( qint64 dur )
 {
 	ui.lbl_seek->setDuration(dur) ;
+	ui.lbl_seek_intro->setDuration(dur) ;
 	m_videoDuration = dur ;
 	ui.lbl_curtime->setText(QString(" %1 / %2 ").arg(getTime(0).toString("mm:ss")).arg(getTime(dur).toString("mm:ss"))) ;
 }
 
 void MainWindow::onVideoPositionChanged( qint64 pos )
 {
+	ui.lbl_seek_intro->setCurrentSeek(pos) ;
 	ui.lbl_seek->setCurrentSeek(pos) ;
 	ui.lbl_curtime->setText(QString(" %1 / %2 ").arg(getTime(pos).toString("mm:ss")).arg(getTime(m_videoDuration).toString("mm:ss"))) ;
 }
@@ -392,6 +507,16 @@ void MainWindow::onVideoPositionChanged( qint64 pos )
 void MainWindow::onSeek( qint64 pos )
 {
 	m_player->setPosition(pos) ;
+}
+
+void MainWindow::onNextImage1()
+{
+	onNextImage() ;
+}
+
+void MainWindow::onPrevImage1()
+{
+	onPrevImage() ;
 }
 
 void MainWindow::onNextImage()
@@ -441,6 +566,7 @@ void MainWindow::paintEvent(QPaintEvent* event)
 void MainWindow::stopPlaying()
 {
 	if( ui.tb_play->isChecked() ) ui.tb_play->click() ;
+	if( ui.tb_play_intro->isChecked() ) ui.tb_play_intro->click() ;
 }
 
 void MainWindow::onAddSize()
@@ -479,8 +605,8 @@ void MainWindow::onLWDoubleClicked( QListWidgetItem* item )
 {
 	if( !ui.lbl_pix->hasImage() )
 	{
-		QMessageBox::information(this,"","Please upload image first.") ;
-		return ;
+//		QMessageBox::information(this,"","Please upload image first.") ;
+//		return ;
 	}
 	QSizeF ratio = item->data(Qt::EditRole+1).toSizeF() ;
 	QString path = item->data(Qt::EditRole+2).toString() ;
@@ -496,7 +622,7 @@ void MainWindow::onLWDoubleClicked( QListWidgetItem* item )
 void MainWindow::loadSetting()
 {
 	QFile styleSheet(":/res/qss/3.qss");
-	if (styleSheet.open(QIODevice::ReadOnly)) setStyleSheet(styleSheet.readAll());
+//	if (styleSheet.open(QIODevice::ReadOnly)) setStyleSheet(styleSheet.readAll());
 
 	QFile file("iconinfo.dat") ;
 	QDataStream in(&file) ;

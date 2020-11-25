@@ -41,21 +41,22 @@ void CxFullImageLabel::paintEvent(QPaintEvent *event)
 		painter.drawRect(0,0,w,h) ;
 		return ;
 	}
-	if( !m_hasImage )
+	if( !m_hasImage && !m_showWatermark )
 	{
-		painter.setFont(QFont("Impact",50)) ;
-		painter.setPen(QPen(Qt::red,3)) ;
-		painter.drawText(0, 0, w, h, Qt::AlignCenter, "No Image" ) ;
+		painter.setFont(QFont("Franklin Gothic Heavy",15)) ;
 		painter.setPen(QPen(Qt::yellow,3)) ;
-		painter.setBrush(Qt::NoBrush) ;
+		painter.setPen(Qt::NoPen) ;
+		painter.setBrush(QBrush("#f0f0f0")) ;
 		painter.drawRect(0,0,w,h) ;
+		painter.setPen(QPen(Qt::black,3)) ;
+		painter.drawText(0, 0, w, h, Qt::AlignCenter, "ADD IMAGE" ) ;
 		return ;
 	}
 	QPixmap pix = m_curPix.scaled(w,h,Qt::KeepAspectRatio,Qt::SmoothTransformation) ;
 	painter.setPen(Qt::NoPen) ;
 	painter.setBrush(Qt::gray) ;
 	painter.drawRect(0,0,w,h) ;
-	painter.drawPixmap((w-pix.width())/2,(h-pix.height())/2,pix) ;
+	if( m_hasImage ) painter.drawPixmap((w-pix.width())/2,(h-pix.height())/2,pix) ;
 	if( m_showWatermark )
 	{
 //		QSize waterSz(w*m_watermarkRatio.width(),h*m_watermarkRatio.height()) ;
